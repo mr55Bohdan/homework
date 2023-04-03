@@ -1,101 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace abstractKlassV2
+namespace AbstractClassV3
 {
-    public abstract class Shape
+    
+    abstract class Shape : IComparable<Shape>
     {
+        //fild
         private string name;
         public string Name
-        { 
-            get=>name; set=> name= value; 
+        {
+            get => name; set => name = value;
         }
         protected Shape(string name)
-        { 
+        {
             Name = name;
         }
-        public abstract double Area();
-
+        
         public abstract double Perimeter();
+        
+        public abstract double Area();
         public abstract int CompareTo(Shape other);
-     }
-    public class Circle: Shape
-    { 
-        private double radius;
-    public double Radius 
-        {
-            get => radius; set => radius = value;
-        }
-        public Circle (string name,double radius):base (name)
-        { 
-            Radius = radius; 
-        }
-        public override double Area()
-        {
-            return radius * radius * Math.PI;
-        }
-        public override double Perimeter()
-        {
-            return 2 * radius * Math.PI;
-        }
-        public override int CompareTo(Shape other)
-        {
-            return Area().CompareTo(other.Area());
-        }
     }
-    public class Square : Shape
-    { 
-        private double side;
-        public double Side
+    
+    class Square : Shape
+    {
+        public double Side;
+        public Square(string name, double side) : base(name)
         {
-            get => side; set => side = value;
-        }
-        public Square (string name, double side):base(name)
-            {
             Side = side;
-            }
-        public override double Area()
-        {
-            return side * side;
         }
-        public override double Perimeter()
+               
+        public override double Perimeter() { return (4 * Side); }
+        public override double Area() 
         {
-            return 4 * side;
+            return (Side* Side); 
         }
         public override int CompareTo(Shape other)
         {
             return Area().CompareTo(other.Area());
         }
     }
+    class Circle : Shape
+    {
 
+        public double Radius;
+
+        public Circle(string name, double radius) : base(name)
+        {
+            Radius = radius;
+        }
+
+
+        public override double Perimeter() 
+        {
+            return (2 *  Math.PI * Radius); 
+        }
+        public override double Area() 
+        { 
+            return (Math.PI* Radius * Radius); 
+        }
+        public override int CompareTo(Shape other)
+        {
+            return Area().CompareTo(other.Area());
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
             List<Shape> shape1 = new List<Shape>();
-            for(int i=0;i<10;i++)
-            { 
-            Console.WriteLine("Enter circle or square");
-            string shape=Console.ReadLine();
-            if(shape.StartsWith("circle"))
-            { 
-            Console.WriteLine("radius");
-                double radius = Convert.ToDouble(Console.ReadLine());
-                shape1.Add(item: new Circle(name:shape,radius));
-            }
-            else
-            { 
-            Console.WriteLine("side");
-                double side= Convert.ToDouble(Console.ReadLine());
-                shape1.Add(item: new Circle(name: shape, side));
-            }
-            }
-            foreach(var shape in shape1)
-            { 
-                Console.WriteLine($"Shape {shape.Name} Area {shape.Area()} Perimeter {shape.Perimeter()}"); 
-            }
 
-            //Console.WriteLine("Hello World!");
+            for (int i = 0; i < 3; i++)
+            {
+                string shape = Console.ReadLine();
+                if (shape.StartsWith("circle"))
+                {
+                    Console.WriteLine("radius");
+                    double radius = Convert.ToDouble(Console.ReadLine());
+                    shape1.Add(item: new Circle(name: shape, radius));
+                }
+                else
+                {
+                    Console.WriteLine("side");
+                    double side = Convert.ToDouble(Console.ReadLine());
+                    shape1.Add(item: new Square(name: shape, side));
+                }
+            }
+            foreach (var shape in shape1)
+            {
+               Console.WriteLine($"Shape {shape.Name} Area {shape.Area()} Perimeter {shape.Perimeter()}");
+            }
+            Console.WriteLine("sorted by area");
+            shape1.Sort();
+            
+            foreach (var shape in shape1)
+            {
+                Console.WriteLine($"Shape {shape.Name} Area {shape.Area()} Perimeter {shape.Perimeter()}");
+            }
+            Shape maxShape;
+            maxShape = shape1[0];
+            foreach(var shape in shape1)
+            {
+                if (shape.Perimeter() > maxShape.Perimeter()) { maxShape = shape; }
+            }
+            Console.Write($"maxShape {maxShape.Name}  Perimeter {maxShape.Perimeter()}");
         }
     }
 }
